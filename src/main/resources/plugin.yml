@@ -1,0 +1,12 @@
+name:        ${project.artifactId}
+version:     ${project.version}
+description: ${project.description}
+author:      RoyCurtis
+website:     https://github.com/Gamealition/SoftPlugin
+main:        roycurtis.softplugin.SoftPlugin
+
+commands:
+   softplugin:
+      description: Management commands for SoftPlugin
+      usage: /<command> reload
+      permission: softplugin.reload
