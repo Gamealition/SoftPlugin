@@ -6,6 +6,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -13,12 +19,17 @@ import java.util.logging.Logger;
  */
 public class SoftPlugin extends JavaPlugin
 {
-    static Logger LOGGER;
+    static SoftPlugin INSTANCE;
+    static Logger     SOFTLOG;
+
+    private Compiler compiler;
+    private Loader   loader;
 
     @Override
     public void onLoad()
     {
-        LOGGER = getLogger();
+        INSTANCE = this;
+        SOFTLOG  = getLogger();
     }
 
     @Override
@@ -26,7 +37,24 @@ public class SoftPlugin extends JavaPlugin
     {
         Config.init(this);
 
-        LOGGER.fine("Plugin fully enabled");
+        // Ensure both directories exist
+        if ( !Config.Paths.source.isDirectory() && !Config.Paths.source.mkdirs() )
+            throw new RuntimeException("Could not make source directory");
+        else
+            SOFTLOG.fine("Sources directory exists: " + Config.Paths.source);
+
+        if ( !Config.Paths.cache.isDirectory() && !Config.Paths.cache.mkdirs() )
+            throw new RuntimeException("Could not make cache directory");
+        else
+            SOFTLOG.fine("Cache directory exists: " + Config.Paths.cache);
+
+        compiler = new Compiler();
+        compiler.begin();
+
+        loader = new Loader();
+        loader.begin();
+
+        SOFTLOG.fine("Plugin fully enabled");
     }
 
     @Override
@@ -35,15 +63,16 @@ public class SoftPlugin extends JavaPlugin
         HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTasks(this);
 
-        LOGGER.fine("Plugin fully disabled; all listeners and tasks unregistered");
+        compiler = null;
+        loader   = null;
+        System.gc();
+
+        SOFTLOG.fine("Plugin fully disabled; all listeners and tasks unregistered");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
-        if ( args.length < 1 || !args[0].equalsIgnoreCase("reload") )
-            return false;
-
         onDisable();
         onEnable();
 

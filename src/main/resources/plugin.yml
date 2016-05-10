@@ -5,8 +5,13 @@ author:      RoyCurtis
 website:     https://github.com/Gamealition/SoftPlugin
 main:        roycurtis.softplugin.SoftPlugin
 
+permissions:
+  softplugin.reload:
+    description: Allow reloading of SoftPlugin, including recompile of Java source
+
 commands:
-   softplugin:
-      description: Management commands for SoftPlugin
-      usage: /<command> reload
-      permission: softplugin.reload
+  softplugin-reload:
+    description: Reloads SoftPlugin config and recompiles all Java source
+    aliases: [spr]
+    permission: softplugin.reload
+    usage: /<command>
