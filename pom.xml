@@ -7,7 +7,7 @@
     <!-- Project properties -->
     <groupId>roycurtis.softplugin</groupId>
     <artifactId>SoftPlugin</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.9.2-0.0.1</version>
 
     <description>
         Allows (un)loading of Java source and class files as plugin code, during runtime
