@@ -24,6 +24,7 @@
  */
 package roycurtis.softplugin;
 
+import com.google.common.io.PatternFilenameFilter;
 import org.bukkit.Bukkit;
 
 import javax.tools.JavaCompiler;
@@ -135,7 +136,7 @@ class Compiler
         List<String> options = Arrays.asList
         (
                     "-d", Config.Dirs.cache.toString(), // Built class output directory
-            "-classpath", BUKKIT_JAR,                   // Use Bukkit JAR as classpath
+            "-classpath", generateClasspath(),          // Use Bukkit + plugins as classpath
                 "-Xlint"                                // Report all code warnings
         );
 
@@ -148,5 +149,18 @@ class Compiler
 
         if ( !task.call() )
             throw new CompilerException();
+    }
+
+    /** Generates classpath string using paths of all plugins available and the Bukkit JAR */
+    private String generateClasspath()
+    {
+        File   pluginDir = new File("plugins/").getAbsoluteFile();
+        File[] plugins   = pluginDir.listFiles( new PatternFilenameFilter(".+\\.jar") );
+        String classpath = BUKKIT_JAR;
+
+        for (File plugin : plugins)
+            classpath += ";" + plugin.getAbsolutePath();
+
+        return classpath;
     }
 }

@@ -24,7 +24,6 @@
  */
 package roycurtis.softplugin;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,7 +53,7 @@ class Loader
         try
         {
             cacheUrl = new URL[] { Config.Dirs.cache.toUri().toURL() };
-            loader   = new URLClassLoader( cacheUrl, Bukkit.class.getClassLoader() );
+            loader   = new URLClassLoader( cacheUrl, SoftPlugin.class.getClassLoader() );
 
             bootClass    = loader.loadClass(Config.Boot.className);
             bootInstance = bootClass
@@ -69,25 +68,24 @@ class Loader
         }
         catch (ClassNotFoundException e)
         {
-            SOFTLOG.severe("Could not find boot class: " + Config.Boot.className);
+            throw new RuntimeException("Could not find boot class: " + Config.Boot.className);
         }
         catch (NoSuchMethodException e)
         {
-            SOFTLOG.severe("Boot class lacks a valid constructor");
+            throw new RuntimeException("Boot class lacks a valid constructor");
         }
         catch (InstantiationException e)
         {
-            SOFTLOG.severe("Could not create boot class");
-            e.printStackTrace();
+            throw new RuntimeException("Could not create boot class", e);
         }
         catch (IllegalAccessException e)
         {
-            SOFTLOG.severe("Boot class' constructor is not set to public");
+            throw new RuntimeException("Boot class' constructor is not set to public");
         }
         catch (InvocationTargetException e)
         {
-            SOFTLOG.severe("Exception thrown in boot class' constructor");
-            e.printStackTrace();
+            e.getCause().printStackTrace();
+            throw new RuntimeException("Exception thrown in boot class' constructor", e.getCause());
         }
     }
 

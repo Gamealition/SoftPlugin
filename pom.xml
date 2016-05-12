@@ -33,8 +33,8 @@
     <repositories>
         <!-- For Spigot/Bukkit/CraftBukkit snapshots -->
         <repository>
-            <id>spigot-snapshots</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>spigot</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/public/</url>
         </repository>
     </repositories>
 
