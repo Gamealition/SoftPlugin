@@ -26,6 +26,40 @@ By compiling Java sources into classes, it could use these benefits:
 * (Paper)Spigot 1.9.2 or later
 * Server needs to be running on JDK 8 or later
 
+# Usage
+
+## Warning
+
+This plugin compiles, loads and executes Java source files it is given. These are executed
+with zero security protection or considerations. They are executed in the same context
+and privilege level as the server itself. Potentially, any SoftPlugin "scripts" can
+destroy the server or the system it is running on.
+
+Use Java source files with SoftPlugin **at your own risk**. Don't give SoftPlugin files
+you are unfamiliar with.
+
+## Setup
+
+1. Upload a built JAR of SoftPlugin to the `plugins` directory of your server
+1. Restart server once
+1. Check `plugins/SoftPlugin/config.yml` and change settings to taste
+1. In the created `source` directory, create or place Java source files in typical layout.
+e.g, a file for class `softplugin.Main` should be in `source/softplugin/Main.java`
+1. Execute `/softplugin-reload` in the server
+
+## Commands
+
+* `/softplugin-reload` (or `/spr`) - does the following:
+  * Reloads SoftPlugin's configuration options
+  * Unloads any currently loaded classes
+  * Discard any compiled classes in the cache
+  * Compiles the source files
+  * Loads and executes the main class defined in the config
+
+## Permissions
+
+* `softplugin.reload` - Allows use of `/softplugin-reload`. Granted to op and console.
+
 # Building
 
 *For building SoftPlugin itself; not for any custom code loaded via SoftPlugin*
