@@ -17,4 +17,4 @@ boot:
   # Fully qualified name of class to attempt to load. It must have a public constructor
   # that accepts an argument of JavaPlugin type.
   # (default: softplugin.Main)
-  class: gamealition.survival.Main
+  class: softplugin.Main
